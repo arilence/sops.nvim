@@ -8,6 +8,7 @@ local DEFAULT_SUPPORTED_FILE_FORMATS = {
   "*.yaml",
   "*.yml",
   "*.json",
+  "*.bin",
   -- Assumes the `filetype` is set to `json`
   "*.dockerconfigjson",
 }
@@ -20,7 +21,7 @@ local function sops_decrypt_buffer(bufnr)
   local path = vim.api.nvim_buf_get_name(bufnr)
   local cwd = vim.fs.dirname(path)
 
-  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+  local filetype = util.get_sops_filetype(bufnr)
 
   vim.system(
     { "sops", "--decrypt", "--input-type", filetype, "--output-type", filetype, path },
@@ -88,7 +89,9 @@ local function sops_encrypt_buffer(bufnr)
     return
   end
 
-  vim.system({ "sops", "edit", path }, {
+  local filetype = util.get_sops_filetype(bufnr)
+
+  vim.system({ "sops", "edit", "--input-type", filetype, "--output-type", filetype, path }, {
     cwd = cwd,
     env = {
       SOPS_EDITOR = editor_script,
