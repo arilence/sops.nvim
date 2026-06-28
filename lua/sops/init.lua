@@ -107,6 +107,8 @@ local function sops_encrypt_buffer(bufnr)
       -- Mark the file as not modified
       vim.api.nvim_set_option_value("modified", false, { buf = bufnr })
 
+      vim.notify("File saved and encrypted successfully", vim.log.levels.INFO)
+
       -- Run BufReadPost autocmds since the buffer contents have changed
       vim.api.nvim_exec_autocmds("BufReadPost", {
         buffer = bufnr,
