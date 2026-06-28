@@ -8,6 +8,7 @@ saved.
 
 - YAML
 - JSON
+- Binary text files (`*.bin`)
 
 ## Requirements
 
